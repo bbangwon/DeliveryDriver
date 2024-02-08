@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Driver : MonoBehaviour
 {
@@ -7,6 +8,8 @@ public class Driver : MonoBehaviour
     [SerializeField] float slowSpeed = 15f;
     [SerializeField] float boostSpeed = 30f;
 
+    Vector2 moveDirection;
+
     void Start()
     {
         
@@ -14,8 +17,8 @@ public class Driver : MonoBehaviour
 
     void Update()
     {
-        float steerAmount = Input.GetAxis("Horizontal") * steerSpeed * Time.deltaTime;
-        float moveAmount = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
+        float steerAmount = moveDirection.x * steerSpeed * Time.deltaTime;
+        float moveAmount = moveDirection.y * moveSpeed * Time.deltaTime;
         transform.Rotate(0, 0, -steerAmount);
         transform.Translate(0, moveAmount, 0);
     }
@@ -31,5 +34,10 @@ public class Driver : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         moveSpeed = slowSpeed;
+    }
+
+    void OnMove(InputValue value)
+    {
+        moveDirection = value.Get<Vector2>();
     }
 }
